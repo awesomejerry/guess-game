@@ -1,13 +1,23 @@
 (ns guess-number.core
   (:gen-class))
 
+(defn not-a-valid-number [] (println "Not a valid number"))
 (defn parse-int [x] (Integer/parseInt x))
-(defn enter-max [] (parse-int (do (print "Please enter maximum number: ")
-                                  (flush)
-                                  (read-line))))
-(defn enter-answer [] (parse-int (do (print "Please enter your answer: ")
-                                     (flush)
-                                     (read-line))))
+(defn get-user-input [message] (do (print message) (flush) (read-line)))
+(defn enter-max []
+  (let [input (get-user-input "Please enter maximum number: ")]
+    (try (parse-int input)
+         (catch Exception e
+           (do
+             (not-a-valid-number)
+             (enter-max))))))
+(defn enter-answer []
+  (let [input (get-user-input "Please enter your answer: ")]
+    (try (parse-int input)
+         (catch Exception e
+           (do
+             (not-a-valid-number)
+             (enter-answer))))))
 (defn verify-answer [answer max equal]
   (let [input (enter-answer)]
     (if (= answer input)
